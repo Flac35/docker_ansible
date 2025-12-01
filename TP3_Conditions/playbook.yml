@@ -1,0 +1,25 @@
+---
+- name: Installer Apache2 et MySQL, puis modifier la page si Apache était déjà installé
+  hosts: all
+  become: yes
+
+  tasks:
+    # 1. Installer Apache2 et MySQL sur node1 et 2
+    - name: Installer Apache2 et MySQL
+      ansible.builtin.apt:
+        name:
+          - apache2
+          - mysql-server
+        state: present
+        update_cache: yes
+      when: ansible_hostname == 'node1' or ansible_hostname == 'node2'
+
+    # 2. Installer git, nginx et cosway sur node3
+    - name: Installer git, nginx et cosway
+      ansible.builtin.apt:
+        name:
+          - git
+          - nginx
+          - cowsay
+        state: present
+      when: ansible_hostname == 'node3' 
