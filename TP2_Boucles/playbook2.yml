@@ -1,0 +1,50 @@
+
+---
+- name: Installer Apache2 et MySQL, puis modifier la page si Apache était déjà installé
+  hosts: all
+  become: yes
+
+  tasks:
+    # 1. Installer Apache2 et MySQL
+    - name: Installer Apache2 et MySQL
+      apt:
+        name:
+          - apache2
+          - mysql-server
+        state: present
+        update_cache: yes
+
+    # 2. Vérifier si Apache2 est installé (sans facts, via apt)
+    - name: Vérifier si Apache2 est installé
+      command: dpkg -l apache2
+      register: apache_check
+      ignore_errors: yes
+
+    - name: Gather the package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Print the package facts
+      ansible.builtin.debug:
+        var: ansible_facts.packages
+
+    - name: Check whether a package called apache2 is installed
+      ansible.builtin.debug:
+        msg: "{{ ansible_facts.packages['apache2'] | length }} versions of apache2 are installed!"
+      when: "'apache2' in ansible_facts.packages"
+
+    # 3. Modifier la page HTML uniquement si Apache est installé
+    - name: Modifier la page index.html si Apache est installé
+      copy:
+        content: "Bonjour depuis Ansible\n"
+        dest: /var/www/html/index.html
+      when: "'apache2' in ansible_facts.packages"
+
+    # 4. Démarrer et activer Apache uniquement si Apache est installé
+    - name: Démarrer et activer Apache
+      service:
+        name: apache2
+        state: started
+        enabled: true
+      when: "'apache2' in ansible_facts.packages"
+
