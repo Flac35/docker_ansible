@@ -1,0 +1,35 @@
+{# 
+  On commence par définir deux variables locales : jour et heure.
+  Ces valeurs proviennent du fact Ansible `ansible_date_time` qui contient
+  des informations sur la date et l'heure du système distant.
+#}
+
+{% set jour = ansible_date_time.day | int %}
+{# 
+  `ansible_date_time.day` donne le jour du mois (ex: "03").
+  On applique le filtre `| int` pour convertir la chaîne en entier,
+  afin de pouvoir faire des calculs (comme modulo).
+#}
+
+{% set heure = ansible_date_time.hour | int %}
+{# 
+  `ansible_date_time.hour` donne l'heure actuelle en format 24h (ex: "14").
+  On la convertit aussi en entier pour comparer avec 12 (midi).
+#}
+
+{# 
+  Affichage du résultat :
+  - Première partie : "impair" si le jour est impair, sinon "pair".
+    On utilise une expression conditionnelle Jinja2 (équivalent du ternaire en Python).
+    `jour % 2 == 1` teste si le jour modulo 2 est égal à 1 (donc impair).
+  - Deuxième partie : "après" si l'heure est > 12, sinon "avant".
+    Cela permet de savoir si on est avant ou après midi.
+#}
+
+{{ "impair" if jour % 2 == 1 else "pair" }} et {{ "après" if heure > 12 else "avant" }} midi.
+{# 
+  Exemple :
+    - Si jour = 3 et heure = 14 → "impair et après midi."
+    - Si jour = 10 et heure = 09 → "pair et avant midi."
+#}
+ 

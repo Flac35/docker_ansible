@@ -2,7 +2,7 @@
 - name: Installer Apache2 et MySQL, puis modifier la page si Apache était déjà installé
   hosts: all
   become: yes
-
+  
   tasks:
     # 1. Installer Apache2 et MySQL sur node1 et 2
     - name: Installer Apache2 et MySQL
@@ -22,4 +22,10 @@
           - nginx
           - cowsay
         state: present
-      when: ansible_hostname == 'node3' 
+      when: ansible_hostname == 'node3'
+      
+    # 3. Appel au template jour.j2 pour inscrire dasn /etc/jour si jour pair/impair et avant/après midi
+    - name: Générer un fichier à partir du template
+      template:
+        src: templates/jour.j2   # Chemin du template sur le contrôleur
+        dest: /etc/jour      # Chemin du fichier généré sur la machine cible
