@@ -2,6 +2,6 @@ uv.lock
 .python-version
 main.py
 pyproject.toml
-TP5_Docker/mysql/
-TP5_Docker/sys/
-TP4_Roles/.ansible/
+./TP5_Docker/mysql/
+./TP5_Docker/sys/
+./TP4_Roles/.ansible/
