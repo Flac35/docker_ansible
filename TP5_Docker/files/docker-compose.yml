@@ -1,0 +1,22 @@
+---
+services:
+
+  apache:
+    container_name: my-apache
+    image: nginx:latest
+    ports:
+      - 80:80
+    depends_on:
+      - mariadb 
+
+  mariadb:
+    container_name: my-mariadb
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ambient
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes: 
+  mariadb_data:

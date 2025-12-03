@@ -1,0 +1,12 @@
+---
+- name: Install et config Docker
+  hosts: all
+  #become: true
+  #become_user: root
+
+  vars: 
+    docker_users: 
+      - ambient-user
+
+  roles:
+    - geerlingguy.docker

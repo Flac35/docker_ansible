@@ -1,0 +1,10 @@
+# Fichier .ansible-lint par défaut
+# Ce fichier permet de personnaliser ansible-lint, mais par défaut il peut être vide.
+# Exemple minimal :
+
+skip_list: []        # Liste des règles à ignorer (vide par défaut)
+warn_list: []        # Liste des règles à afficher en warning (vide par défaut)
+offline: false       # false = ansible-lint peut télécharger des collections si nécessaire
+parseable: false     # false = sortie lisible par l'humain
+verbosity: 1         # Niveau de verbosité (1 = normal)
+

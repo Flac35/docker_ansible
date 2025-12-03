@@ -1,0 +1,40 @@
+---
+# Examples use the django example at https://docs.docker.com/compose/django. Follow it to create the
+# files directory
+
+- name: Run using a project directory
+  hosts: all
+  gather_facts: false
+  vars_files: 
+    vars/docker_wordpress_vars.yml
+
+  tasks:
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: "/root/TP6/"
+        state: directory
+        mode: '0755'
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: "./files/{{ item }}"
+        dest: "/root/TP6/"
+        mode: '0644'
+      loop:
+        - docker-compose.yml
+        - Dockerfile
+
+    - name: Tear down existing services
+      community.docker.docker_compose_v2:
+        project_src: "/root/TP6"
+        state: absent
+
+    - name: Create and start services
+      community.docker.docker_compose_v2:
+        project_src: "/root/TP6"
+        state: present
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
